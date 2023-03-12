@@ -1,0 +1,29 @@
+Wine Quality ML
+This is an R Markdown Notebook. When you execute code within the notebook, the results appear beneath the code.
+
+OBSERVING THE DATA LOADED FROM THE DATASET
+winequality_red %>% 
+kable() %>% 
+  kable_styling(bootstrap_options = "striped",
+                full_width = F,
+                font_size = 22)
+glimpse(winequality_red)
+summary(winequality_red)
+Looking at the Pearson correlations
+chart.Correlation(winequality_red, histogram = T, method = "pearson")
+ESTIMATING A MULTIPLE MODEL WITH DATABASE VARIABLES
+model_wine <- lm(formula = quality ~ .,
+                    data = winequality_red)
+summary(model_wine)
+confint(model_wine, level = 0.95)
+summ(model_wine, confint = T, digits = 3, ci.width = .95)
+export_summs(model_wine, scale = F, digits = 5)
+STEPWISE PROCEDURE
+step_wine <- step(model_wine, k = 3.841459)
+summary(step_wine)
+export_summs(model_wine, step_wine,
+             model.names = c("Modelo Linear","Modelo Step"),
+             scale = F, digits = 6)
+Saving the fitted values of the model step_wine in dataset winequality_red
+winequality_red$yhat_step_wine <- step_wine$fitted.values
+view(winequality_red)
